@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tourlast_assessment/models/flight_itinerary.dart';
+import 'package:tourlast_assessment/screens/flight_detail_screen.dart';
 import 'package:tourlast_assessment/screens/flight_list_screen.dart';
 
 void main() {
@@ -21,6 +23,11 @@ class TourlastAppState extends State<TourlastApp> {
       initialRoute: FlightListScreen.routeName,
       routes: {
         FlightListScreen.routeName: (context) => const FlightListScreen(),
+        FlightDetailScreen.routeName: (context) {
+          final flight =
+              ModalRoute.of(context)!.settings.arguments as FlightItinerary;
+          return FlightDetailScreen(flight: flight);
+        },
       },
     );
   }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:tourlast_assessment/models/flight_itinerary.dart';
+import 'package:tourlast_assessment/screens/flight_detail_screen.dart';
 
 class FlightCard extends StatelessWidget {
   final FlightItinerary flight;
@@ -9,7 +10,12 @@ class FlightCard extends StatelessWidget {
   const FlightCard({super.key, required this.flight});
 
   void _navigateToDetail(BuildContext context) {
-    // TODO: implement navigation
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FlightDetailScreen(flight: flight),
+      ),
+    );
   }
 
   @override
