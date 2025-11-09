@@ -86,14 +86,21 @@ class _FlightListScreenState extends State<FlightListScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _flights.isEmpty
-          ? const Center(child: Text('No flights found for this route.'))
-          : ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              itemCount: _flights.length,
-              itemBuilder: (context, index) {
-                final flight = _flights[index];
-                return FlightCard(flight: flight);
-              },
+          ? const Center(child: Text('No flights found.'))
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: _flights.length,
+                    itemBuilder: (context, index) {
+                      final flight = _flights[index];
+                      return FlightCard(flight: flight);
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.only(bottom: 100)),
+              ],
             ),
     );
   }
