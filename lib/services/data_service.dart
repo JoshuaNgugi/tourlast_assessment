@@ -20,4 +20,8 @@ class DataService {
         .map((item) => FlightItinerary.fromJson(item["FareItinerary"]))
         .toList();
   }
+
+  List<String> getUniqueAirlines() {
+    return _allFlights.map((f) => f.validatingAirlineCode).toSet().toList();
+  }
 }
