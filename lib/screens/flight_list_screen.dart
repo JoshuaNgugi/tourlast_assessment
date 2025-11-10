@@ -43,7 +43,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
 
         if (_allFlightsCache.isNotEmpty) {
           _absoluteMaxPrice = _allFlightsCache
-              .map((f) => f.totalFareAmount)
+              .map((flight) => flight.totalFareAmount)
               .reduce(max)
               .ceilToDouble();
           _priceRange = RangeValues(0.0, _absoluteMaxPrice);

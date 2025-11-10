@@ -33,7 +33,10 @@ class DataService {
   }
 
   List<String> getUniqueAirlines() {
-    return _allFlights.map((f) => f.validatingAirlineCode).toSet().toList();
+    return _allFlights
+        .map((flight) => flight.validatingAirlineCode)
+        .toSet()
+        .toList();
   }
 
   Airline? getAirlineDetails(String code) {
