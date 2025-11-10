@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tourlast_assessment/models/flight_itinerary.dart';
 import 'package:tourlast_assessment/services/data_service.dart';
 import 'package:tourlast_assessment/widgets/flight_card.dart';
@@ -15,7 +16,6 @@ class FlightListScreen extends StatefulWidget {
 }
 
 class _FlightListScreenState extends State<FlightListScreen> {
-  final DataService _dataService = DataService();
   List<FlightItinerary> _displayedFlights = [];
   List<FlightItinerary> _allFlightsCache = [];
   bool _isLoading = true;
@@ -26,27 +26,31 @@ class _FlightListScreenState extends State<FlightListScreen> {
   bool _showDirectOnly = false;
   double _absoluteMaxPrice = 0.0;
 
+  bool _initialized = false;
+
   @override
-  void initState() {
-    super.initState();
-    _loadFlights();
-  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
 
-  Future<void> _loadFlights() async {
-    await _dataService.loadData();
-    setState(() {
-      _allFlightsCache = _dataService.allFlights;
-      _displayedFlights = _allFlightsCache;
+    final dataService = Provider.of<DataService>(context, listen: false);
 
-      // Initialize price range based on actual data
-      _absoluteMaxPrice = _allFlightsCache
-          .map((f) => f.totalFareAmount)
-          .reduce(max)
-          .ceilToDouble();
+    dataService.loadData().then((_) {
+      setState(() {
+        _allFlightsCache = dataService.allFlights;
+        _displayedFlights = _allFlightsCache;
 
-      _priceRange = RangeValues(0.0, _absoluteMaxPrice);
+        if (_allFlightsCache.isNotEmpty) {
+          _absoluteMaxPrice = _allFlightsCache
+              .map((f) => f.totalFareAmount)
+              .reduce(max)
+              .ceilToDouble();
+          _priceRange = RangeValues(0.0, _absoluteMaxPrice);
+        }
 
-      _isLoading = false;
+        _isLoading = false;
+      });
     });
   }
 
@@ -80,7 +84,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
   }
 
   void _showFilterSheet() {
-    final List<String> availableAirlines = _dataService.getUniqueAirlines();
+    final dataService = Provider.of<DataService>(context, listen: false);
+    final List<String> availableAirlines = dataService.getUniqueAirlines();
 
     showModalBottomSheet(
       context: context,

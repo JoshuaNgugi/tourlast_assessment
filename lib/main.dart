@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tourlast_assessment/models/flight_itinerary.dart';
 import 'package:tourlast_assessment/screens/flight_detail_screen.dart';
 import 'package:tourlast_assessment/screens/flight_list_screen.dart';
+import 'package:tourlast_assessment/services/data_service.dart';
 
 void main() {
-  runApp(const TourlastApp());
+  runApp(
+    Provider<DataService>(
+      create: (_) => DataService()..loadData(),
+      child: const TourlastApp(),
+    ),
+  );
 }
 
 class TourlastApp extends StatefulWidget {

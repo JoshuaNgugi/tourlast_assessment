@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tourlast_assessment/models/flight_itinerary.dart';
 import 'package:tourlast_assessment/models/flight_segment.dart';
 import 'package:tourlast_assessment/models/passenger_fare_breakdown.dart';
+import 'package:tourlast_assessment/services/data_service.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   static const String routeName = '/flight-details';
 
   final FlightItinerary flight;
 
-  FlightDetailScreen({required this.flight, super.key});
+  const FlightDetailScreen({required this.flight, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class FlightDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header and Total Price
-            _buildHeaderCard(context, 'Qatar Airways'),
+            _buildHeaderCard(context),
             const SizedBox(height: 20),
             // Flight Segments/Itinerary
             _buildSectionTitle(
@@ -69,7 +71,13 @@ class FlightDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderCard(BuildContext context, String airlineName) {
+  Widget _buildHeaderCard(BuildContext context) {
+    final dataService = Provider.of<DataService>(context);
+
+    final airline = dataService.getAirlineDetails(flight.validatingAirlineCode);
+    final airlineName = airline?.name ?? flight.validatingAirlineCode;
+    final logoUrl = airline?.logoUrl;
+
     return Card(
       elevation: 6,
       child: Padding(
@@ -81,19 +89,32 @@ class FlightDetailScreen extends StatelessWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey.shade200),
               ),
-              child: Center(
-                child: Text(
-                  flight.validatingAirlineCode,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: logoUrl != null
+                    ? Image.network(
+                        logoUrl,
+                        fit: BoxFit.contain,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Text(flight.validatingAirlineCode),
+                          );
+                        },
+                      )
+                    : Center(child: Text(flight.validatingAirlineCode)),
               ),
             ),
+
             const SizedBox(width: 15),
             Expanded(
               child: Column(
