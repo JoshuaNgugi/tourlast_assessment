@@ -34,8 +34,9 @@ class FlightCard extends StatelessWidget {
       segment.arrivalTime,
     ).format(context);
 
-    final duration =
-        '${(int.parse(segment.durationMinutes) / 60).floor()}h ${int.parse(segment.durationMinutes) % 60}m';
+    final durationHours = (int.parse(segment.durationMinutes) / 60).floor();
+    final durationMin = (int.parse(segment.durationMinutes) % 60);
+    final duration = '${durationHours}h ${durationMin}m';
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
