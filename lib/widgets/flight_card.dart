@@ -1,5 +1,3 @@
-// Part of lib/screens/flight_list_screen.dart (or separate in lib/widgets)
-
 import 'package:flutter/material.dart';
 import 'package:tourlast_assessment/models/flight_itinerary.dart';
 import 'package:tourlast_assessment/screens/flight_detail_screen.dart';
