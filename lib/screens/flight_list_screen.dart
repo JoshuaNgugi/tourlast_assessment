@@ -176,7 +176,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
   @override
   void initState() {
     super.initState();
-    currentAirlines = Set.from(widget.initialAirlines);
+    currentAirlines = widget.initialAirlines;
     currentPriceRange = widget.initialPriceRange;
     currentDirectOnly = widget.initialDirectOnly;
   }

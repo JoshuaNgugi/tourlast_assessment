@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tourlast_assessment/models/flight_itinerary.dart';
 import 'package:tourlast_assessment/screens/flight_detail_screen.dart';
 
@@ -21,12 +22,18 @@ class FlightCard extends StatelessWidget {
     final segment = flight.segments.first;
     final airlineCode = flight.validatingAirlineCode;
     final totalPrice = flight.totalFareAmount.toStringAsFixed(2);
+
+    final departureDate = DateFormat(
+      'd MMM yyyy',
+    ).format(segment.departureTime);
     final departureTime = TimeOfDay.fromDateTime(
       segment.departureTime,
     ).format(context);
+    final arrivateDate = DateFormat('d MMM yyyy').format(segment.arrivalTime);
     final arrivalTime = TimeOfDay.fromDateTime(
       segment.arrivalTime,
     ).format(context);
+
     final duration =
         '${(int.parse(segment.durationMinutes) / 60).floor()}h ${int.parse(segment.durationMinutes) % 60}m';
 
@@ -67,9 +74,15 @@ class FlightCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
+                        departureDate,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
                         departureTime,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
+                      const SizedBox(height: 4),
                       Text(
                         segment.departureAirportCode,
                         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -102,9 +115,15 @@ class FlightCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
+                        arrivateDate,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
                         arrivalTime,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
+                      const SizedBox(height: 4),
                       Text(
                         segment.arrivalAirportCode,
                         style: const TextStyle(fontWeight: FontWeight.bold),
