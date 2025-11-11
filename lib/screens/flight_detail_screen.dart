@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tourlast_assessment/models/flight_itinerary.dart';
 import 'package:tourlast_assessment/models/flight_segment.dart';
@@ -146,9 +147,11 @@ class FlightDetailScreen extends StatelessWidget {
   }
 
   Widget _buildSegmentTile(BuildContext context, FlightSegment segment) {
+    final deptDate = DateFormat('d MMM yyyy').format(segment.departureTime);
     final depTime = TimeOfDay.fromDateTime(
       segment.departureTime,
     ).format(context);
+    final arrDate = DateFormat('d MMM yyyy').format(segment.arrivalTime);
     final arrTime = TimeOfDay.fromDateTime(segment.arrivalTime).format(context);
     final duration =
         '${(int.parse(segment.durationMinutes) / 60).floor()}h ${int.parse(segment.durationMinutes) % 60}m';
@@ -172,7 +175,12 @@ class FlightDetailScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildTimeInfo(depTime, segment.departureAirportCode, true),
+                _buildTimeInfo(
+                  deptDate,
+                  depTime,
+                  segment.departureAirportCode,
+                  true,
+                ),
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -181,7 +189,12 @@ class FlightDetailScreen extends StatelessWidget {
                   ),
                   child: Text(duration, style: const TextStyle(fontSize: 12)),
                 ),
-                _buildTimeInfo(arrTime, segment.arrivalAirportCode, false),
+                _buildTimeInfo(
+                  arrDate,
+                  arrTime,
+                  segment.arrivalAirportCode,
+                  false,
+                ),
               ],
             ),
           ],
@@ -190,7 +203,12 @@ class FlightDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeInfo(String time, String code, bool isDeparture) {
+  Widget _buildTimeInfo(
+    String date,
+    String time,
+    String code,
+    bool isDeparture,
+  ) {
     return Column(
       crossAxisAlignment: isDeparture
           ? CrossAxisAlignment.start
@@ -200,7 +218,10 @@ class FlightDetailScreen extends StatelessWidget {
           time,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
+        const SizedBox(height: 4),
         Text(code, style: TextStyle(color: Colors.grey.shade700)),
+        const SizedBox(height: 4),
+        Text(date, style: TextStyle(color: Colors.grey.shade700)),
       ],
     );
   }
