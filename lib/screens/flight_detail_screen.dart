@@ -31,9 +31,9 @@ class FlightDetailScreen extends StatelessWidget {
               Icons.connecting_airports,
               'Itinerary & Route',
             ),
-            ...flight.segments
-                .map((s) => _buildSegmentTile(context, s))
-                .toList(),
+            ...flight.segments.map(
+              (segment) => _buildSegmentTile(context, segment),
+            ),
             // Price Breakdown
             const SizedBox(height: 20),
             _buildSectionTitle(context, Icons.price_change, 'Price Breakdown'),
@@ -153,8 +153,11 @@ class FlightDetailScreen extends StatelessWidget {
     ).format(context);
     final arrDate = DateFormat('d MMM yyyy').format(segment.arrivalTime);
     final arrTime = TimeOfDay.fromDateTime(segment.arrivalTime).format(context);
-    final duration =
-        '${(int.parse(segment.durationMinutes) / 60).floor()}h ${int.parse(segment.durationMinutes) % 60}m';
+
+    // The extraction here is repeating as in FlightCard. Place it as a global function.
+    final durationHours = (int.parse(segment.durationMinutes) / 60).floor();
+    final durationMin = (int.parse(segment.durationMinutes) % 60);
+    final duration = '${durationHours}h ${durationMin}m';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
